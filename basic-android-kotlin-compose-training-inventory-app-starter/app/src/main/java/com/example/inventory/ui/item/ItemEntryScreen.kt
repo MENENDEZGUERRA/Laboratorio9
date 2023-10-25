@@ -45,7 +45,7 @@ import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
 import java.util.Currency
 import java.util.Locale
-
+import androidx.compose.runtime.rememberCoroutineScope
 object ItemEntryDestination : NavigationDestination {
     override val route = "item_entry"
     override val titleRes = R.string.item_entry_title
@@ -54,9 +54,15 @@ object ItemEntryDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemEntryScreen(
+    val coroutineScope = rememberCoroutineScope()
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
+    onSaveClick = {
+        coroutineScope.launch {
+            viewModel.saveItem()
+        }
+    },
     viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Scaffold(
@@ -84,8 +90,12 @@ fun ItemEntryScreen(
 fun ItemEntryBody(
     itemUiState: ItemUiState,
     onItemValueChange: (ItemDetails) -> Unit,
-    onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onSaveClick = {
+        coroutineScope.launch {
+        }
+    },
+    modifier = modifier.padding(innerPadding)
+
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
